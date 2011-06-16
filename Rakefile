@@ -1,8 +1,9 @@
 require 'rubygems'
 require 'rake'
+require 'rake/dsl_definition'
 
 begin
-  gem 'jeweler', '~> 1.5.2'
+  gem 'jeweler', '~> 1.6.2'
   require 'jeweler'
 
   Jeweler::Tasks.new do |gem|
@@ -23,5 +24,5 @@ rescue LoadError
   puts 'Jeweler (or a dependency) not available. Install it with: gem install jeweler'
 end
 
-require "spec/rake/spectask"
-Spec::Rake::SpecTask.new
+#require "spec/rake/spectask"
+#Spec::Rake::SpecTask.new
