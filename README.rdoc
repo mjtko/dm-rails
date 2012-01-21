@@ -151,7 +151,7 @@ Using {bundler}[http://github.com/carlhuda/bundler] it's really easy to get an a
 
 DataMapper supports connecting to and working with multiple repositories easily. In order to be able to take full advantage of that feature in rails, you can configure as many repositories for your different environments as you wish. All you need to do is follow some simple naming conventions and you're good to go. Have a look at the #{adapter}_defaults declarations in the sample files below. That's the only convention you need to follow. Your default declarations should always end with "defaults". This is necessary for dm-rails to not confuse these with any of your environment declarations. In fact, dm-rails looks at the content of your database.yml and rejects every key that matches /defaults/. The remaining entries represent the repository configurations for the available environments.
 
-An example for setting up a single repository for every environment.
+An example for setting up a single repository for every environment. This will setup an implicit 'default' repository.
 
   defaults: &defaults
     adapter: mysql
@@ -169,6 +169,10 @@ An example for setting up a single repository for every environment.
     database: rails3_app_production
     <<: *defaults
 
+An example of setting up a single repository with a URI, which overrides all other configuration for that environment:
+
+  development:
+    uri: mysql://localhost/rails3_app_development?user=mysql
 
 An example for setting up multiple repositories for every environment.
 
@@ -417,7 +421,7 @@ Activating the identity map is achieved by installing a middleware that wraps th
 
   DataMapper.repository { ... }
 
-Note that this scopes every call to datamapper to the :default repository specified in your database.yml file. If you need to access a different repository from within your actions, just wrap the calls in another DataMapper.repository block. DataMapper stacks the repositories it uses and the innermost will always win.
+Note that this scopes every call to datamapper to the :default repository specified in your database.yml file. If you need to access a different repository from within your actions, just wrap the calls in another DataMapper.repository block. DataMapper stacks the repositories it uses and the innermost will always win. see also next paragraph.
 
 In order to activate the Identity Map in your application, you need to explicitly use the provided middleware (or in fact any other middleware that does the job to your liking) in any of your controllers. For example, if you want to enable the Identity Map for all controllers, you would declare to use the middleware in your ApplicationController.
 
@@ -427,7 +431,11 @@ In order to activate the Identity Map in your application, you need to explicitl
     protect_from_forgery
   end
 
-If you've created your application using the official templates at http://datamapper.org/templates/rails.rb this has already been added for you. If for some reason you don't want to enable the Identity Map globally for all controllers, you can either just use the middleware in a few selected controllers (in case you don't have too many controllers needing it), or you can create a controller class that uses the middleware, and inherit from that controller in cases where you need Identity Map support.
+For a different scope then :default of other repositories replace/add the line with:
+
+    use Rails::DataMapper::Middleware::IdentityMap, :myscope
+
+If you've created your application using the official templates at http://datamapper.org/templates/rails.rb this has already been added for you. If for some reason you don't want to enable the (default) Identity Map globally for all controllers, you can either just use the middleware in a few selected controllers (in case you don't have too many controllers needing it), or you can create a controller class that uses the middleware, and inherit from that controller in cases where you need Identity Map support.
 
   # app/controllers/identity_map_controller.rb
   require 'dm-rails/middleware/identity_map'

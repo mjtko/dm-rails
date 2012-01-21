@@ -2,27 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'rake/dsl_definition'
 
-begin
-  gem 'jeweler', '~> 1.6.2'
-  require 'jeweler'
-
-  Jeweler::Tasks.new do |gem|
-    gem.name        = 'dm-rails'
-    gem.summary     = 'Use DataMapper with Rails 3'
-    gem.description = 'Integrate DataMapper with Rails 3'
-    gem.email       = 'gamsnjaga@gmail.com'
-    gem.homepage    = 'http://github.com/datamapper/%s' % gem.name
-    gem.authors     = [ 'Martin Gamsjaeger (snusnu)', 'Dan Kubb' ]
-
-    gem.rubyforge_project = 'datamapper'
-  end
-
-  Jeweler::GemcutterTasks.new
-
-  FileList['tasks/**/*.rake'].each { |task| import task }
-rescue LoadError
-  puts 'Jeweler (or a dependency) not available. Install it with: gem install jeweler'
-end
+FileList['tasks/**/*.rake'].each { |task| import task }
 
 #require "spec/rake/spectask"
 #Spec::Rake::SpecTask.new
